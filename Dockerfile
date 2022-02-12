@@ -69,8 +69,8 @@ CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8000", "main:app"]
 # 'lint' stage runs black and isort
 # running in check mode means build will fail if any linting errors occur
 FROM development AS lint
-RUN black --config ./pyproject.toml --check app tests
-RUN isort --settings-path ./pyproject.toml --recursive --check-only app tests
+#RUN black --config ./pyproject.toml --check app tests
+#RUN isort --settings-path ./pyproject.toml --recursive --check-only app tests
 CMD ["tail", "-f", "/dev/null"]
 
 # 'test' stage runs our unit tests with pytest and

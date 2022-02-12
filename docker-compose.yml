@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  web:
+    build:
+      context: .
+      target: development
+      #target: production
+    volumes:
+      - app:/app
+    working_dir: /app
+    ports:
+      - "8000:8000"
+
+volumes:
+  app:
