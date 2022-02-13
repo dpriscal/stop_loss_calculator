@@ -55,3 +55,15 @@ black app (file or directory)
 ```shell
 isort app  (file or directory)
 ```
+
+## Development tips
+
+### Prepare the docker image for develop new features
+```shell
+docker build --tag stop_loss_calculator . --target development
+```
+
+### Run the project allowing code changes
+```shell
+docker run --rm -it -p 127.0.0.1:8000:8000 -v project_directory:/app stop_loss_calculator
+```
