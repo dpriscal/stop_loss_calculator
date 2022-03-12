@@ -6,10 +6,10 @@ from fastapi import FastAPI
 import os
 
 working_directory = os.path.abspath(os.getcwd())
-config = dotenv_values(working_directory + "/app/.env")
+config = dotenv_values(".env")
 financial_api_key = config["FINANCIALMODELINGPREP_API_KEY"]
 
-app = FastAPI()
+api = FastAPI()
 
 
 def monthly(df):
@@ -147,7 +147,7 @@ def get_stop_loss_rows(symbols):
             print(e)
 
 
-@app.get("/stocks/{symbol}")
+@api.get("/stocks/{symbol}")
 async def root(symbol: str):
     rows = get_stop_loss_rows([symbol])
     stop_loss = choseStopLoss(

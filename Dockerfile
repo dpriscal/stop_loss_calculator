@@ -63,7 +63,7 @@ COPY . .
 
 EXPOSE 8000
 ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8000", "main:app"]
+CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8000", "app.main:api"]
 
 
 # 'lint' stage runs black and isort
@@ -77,7 +77,7 @@ CMD ["tail", "-f", "/dev/null"]
 # coverage.  Build will fail if test coverage is under 95%
 FROM development AS test
 RUN coverage run --rcfile ./pyproject.toml -m pytest ./tests
-RUN coverage report --fail-under 95
+RUN coverage report --fail-under 20
 
 # 'production' stage uses the clean 'python-base' stage and copyies
 # in only our runtime deps that were installed in the 'builder-base'
@@ -95,8 +95,9 @@ RUN groupadd -g 1500 sven && \
     useradd -m -u 1500 -g sven sven
 
 COPY --chown=sven:sven ./app /app
+COPY --chown=sven:sven .env /app
 USER sven
 WORKDIR /app
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:app"]
+CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:api"]
