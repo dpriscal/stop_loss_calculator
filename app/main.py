@@ -88,6 +88,7 @@ def findTheLowest(df, index, num_elements):
         if isTheLower(df, index, num_elements):
             return index
         index = index - 1
+        num_elements = min(index, num_elements)
     return index
 
 
@@ -135,12 +136,9 @@ def get_stop_loss_rows(symbols):
 
     for symbol in symbols:
         try:
-            days = 365 * 5
-            df = getStockData(symbol, days)
-            rows.append(get_stop_loss(symbol, df, False, "W", 20))
             days = 365 * 10
             df = getStockData(symbol, days)
-            rows.append(get_stop_loss(symbol, df, False, "MS", 7))
+            rows.append(get_stop_loss(symbol, df, False, "MS", 10))
             return rows
         except Exception as e:
             print("Problem with: " + symbol)
@@ -150,7 +148,4 @@ def get_stop_loss_rows(symbols):
 @api.get("/stocks/{symbol}")
 async def root(symbol: str):
     rows = get_stop_loss_rows([symbol])
-    stop_loss = choseStopLoss(
-        rows[0]["stop_loss"], rows[1]["stop_loss"], rows[1]["current_price"]
-    )
-    return {"symbol": symbol, "stop_loss": stop_loss}
+    return {"symbol": symbol, "stop_loss": rows[0]["stop_loss"], "stop_loss_date": rows[0]["stop_loss_date"]}
