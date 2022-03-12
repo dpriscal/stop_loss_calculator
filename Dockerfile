@@ -58,7 +58,7 @@ RUN chmod +x /docker-entrypoint.sh
 WORKDIR $PYSETUP_PATH
 RUN poetry install
 
-WORKDIR /app
+WORKDIR /stop_loss_calculator
 COPY . .
 
 EXPOSE 8000
@@ -80,7 +80,7 @@ RUN coverage run --rcfile ./pyproject.toml -m pytest ./tests
 RUN coverage report --fail-under 20
 
 # 'production' stage uses the clean 'python-base' stage and copyies
-# in only our runtime deps that were installed in the 'builder-base'
+# in only our runtime deps that were installed in the 'builder-base'app
 FROM python-base as production
 ENV FASTAPI_ENV=production
 
