@@ -7,7 +7,7 @@ This project will help you to calculate the asset stop loss via API
 Build images with:
 
 ```shell
-docker build --tag stop_loss_calculator --file docker/Dockerfile .
+docker build --tag stop_loss_calculator .
 ```
 
 The Dockerfile uses multi-stage builds to run lint and test stages before building the production stage.
@@ -16,13 +16,13 @@ If linting or testing fails the build will fail.
 You can stop the build at specific stages with the `--target` option:
 
 ```shell
-docker build --tag stop_loss_calculator --file docker/Dockerfile . --target <stage>
+docker build --tag stop_loss_calculator . --target <stage>
 ```
 
 For example we wanted to stop at the **test** stage:
 
 ```shell
-docker build --tag stop_loss_calculator --file docker/Dockerfile --target test .
+docker build --tag stop_loss_calculator --target test .
 ```
 
 We could then get a shell inside the container with:
@@ -65,5 +65,16 @@ docker build --tag stop_loss_calculator . --target development
 
 ### Run the project allowing code changes
 ```shell
-docker run --rm -it -p 127.0.0.1:8000:8000 -v project_directory:/app stop_loss_calculator
+docker run --rm -it -p 127.0.0.1:8000:8000 -v project_directory:/stop_loss_calculator stop_loss_calculator
+```
+
+### Run the project in the background from the terminal (detached mode)
+```shell
+docker run --rm -it -d -p 127.0.0.1:8000:8000 -v project_directory:/stop_loss_calculator stop_loss_calculator
+```
+```shell
+sudo docker ps -a
+```
+```shell
+docker kill project_id
 ```
