@@ -90,9 +90,8 @@ COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-COPY ./app /app
-COPY .env /app
-WORKDIR /app
+WORKDIR /stop_loss_calculator
+COPY . .
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:api"]
+CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "app.main:api"]
