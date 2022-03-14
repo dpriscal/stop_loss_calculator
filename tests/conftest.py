@@ -1,9 +1,10 @@
 import os
+import sys
 
 import pytest
 from starlette.testclient import TestClient
-import sys
-sys.path.insert(0, '/stop_loss_calculator')
+
+sys.path.insert(0, "/stop_loss_calculator")
 
 from app.main import api
 
