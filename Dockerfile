@@ -90,13 +90,8 @@ COPY ./docker/gunicorn_conf.py /gunicorn_conf.py
 COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-# Create user
-RUN groupadd -g 1500 sven && \
-    useradd -m -u 1500 -g sven sven
-
-COPY --chown=sven:sven ./app /app
-COPY --chown=sven:sven .env /app
-USER sven
+COPY ./app /app
+COPY .env /app
 WORKDIR /app
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
