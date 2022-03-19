@@ -41,9 +41,22 @@ docker run --rm -it -p 127.0.0.1:8000:8000 stop_loss_calculator
 
 ( The project was dockerized using this example: <https://github.com/svx/poetry-fastapi-docker> )
 
-## Project documentation
+## Project API documentation
 
 http://127.0.0.1:8000/docs
+
+## Environment variables
+The file .env.example has en example of all environment variables that need to be set for the project to work properly.
+
+Copy and paste this file and rename it to .env. In this new file you have to put the real variables values
+```shell
+cp .env.exmaple .env
+```
+
+### Env vars description
+* FINANCIALMODELINGPREP_API_KEY: Is the API key provided by the website [financialmodelingprep](https://site.financialmodelingprep.com/). Check the [API documentation](https://site.financialmodelingprep.com/developer/docs) to have more context.
+
+
 
 ## Code quality
 
