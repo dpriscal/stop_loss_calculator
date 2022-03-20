@@ -95,6 +95,9 @@ class Financialmodelingprep:
         return df.ewm(span=periods, adjust=False, min_periods=periods).mean()
 
     def findTheLowest(self, df, index, num_elements):
+        if index == 0:
+            return index
+
         while index > 0:
             if self.isTheLower(df, index, num_elements):
                 return index
@@ -102,7 +105,10 @@ class Financialmodelingprep:
         return index
 
     def isTheLower(self, df, index, num_elements):
-        for i in range(1, min(index, num_elements)):
-            if not (df[index] < df[index - i]):
+        if index == 1:
+            return df[index] < df[index - 1]
+        rang = range(1, min(index, num_elements))
+        for i in rang:
+            if not (df[index] < df[index - i]) and not pd.isna(df[index - i]):
                 return False
         return True
