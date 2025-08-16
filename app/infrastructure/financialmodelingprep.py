@@ -133,6 +133,31 @@ class Financialmodelingprep:
         selected = selected.sort_values(by="date").reset_index(drop=True)
         return selected
 
+    def get_macd_minima_rows(self, symbol: str, days: int, periodicity: str = "W", window: int = 1):
+        """
+        Fetch historical data for `symbol`, resample to `periodicity`, compute MACD,
+        detect local minima with `window`, and return a list of dict rows ordered by date.
+        """
+        stock_df = self.getStockData(symbol, days)
+        stock_df = _ensure_datetime_index(stock_df)
+
+        # Resample to target periodicity
+        df_resampled = self.resample(stock_df.copy(), periodicity)
+        macd_minima_df = self.get_macd_minima(df_resampled, periodicity=periodicity, window=window)
+
+        rows = []
+        for _, row in macd_minima_df.iterrows():
+            rows.append(
+                {
+                    "symbol": symbol,
+                    "date": row["date"],
+                    "macd": float(row["macd"]),
+                    "price": float(row["price"]),
+                    "period": periodicity,
+                }
+            )
+        return rows
+
 
 def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
     """
