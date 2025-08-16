@@ -27,14 +27,14 @@ This document describes the HTTP endpoints exposed by the service.
 }
 ```
 
-### Get weekly macd minima for a symbol
+### Get macd minima for a symbol
 
 - Method: `GET`
 - Path: `/stocks/{symbol}/macd-minima`
 - Path params:
   - `symbol` (string): the ticker, e.g., `AAPL`
 - Query params:
-  - `period` (string, default `W`): aggregation period, currently `W` (weekly)
+  - `period` (string, default `W`): aggregation period. Supported: `D` (daily), `W` (weekly), `M` (monthly)
   - `window` (integer, default `1`): local-minima neighborhood size used to detect minima (higher filters more)
   - `days` (integer, default `3650`): number of historical days to fetch
 - Response body (200): list of minima ordered by date.
