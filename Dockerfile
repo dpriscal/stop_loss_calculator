@@ -3,7 +3,7 @@
 # See https://docs.docker.com/develop/develop-images/multistage-build/
 
 # Creating a python base with shared environment variables
-FROM python:3.9-slim-buster as python-base
+FROM python:3.9-slim-bullseye as python-base
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
@@ -32,8 +32,8 @@ RUN buildDeps="build-essential" \
 # Install Poetry - respects $POETRY_VERSION & $POETRY_HOME
 ENV POETRY_VERSION=1.1.5
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && \
-    chmod a+x /opt/poetry/bin/poetry
+RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    chmod a+x $POETRY_HOME/bin/poetry
 
 # We copy our Python requirements here to cache them
 # and install only runtime deps using poetry
