@@ -151,8 +151,8 @@ class Financialmodelingprep:
                 {
                     "symbol": symbol,
                     "date": row["date"],
-                    "macd": float(row["macd"]),
-                    "price": float(row["price"]),
+                    "macd": float(row["macd"]) if row.get("macd") is not None else None,
+                    "price": float(row["price"]) if row.get("price") is not None else None,
                     "period": periodicity,
                 }
             )
