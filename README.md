@@ -92,9 +92,9 @@ sudo docker ps -a
 docker kill project_id
 ```
 
-## Qa for macd minima
+## Qa
 
-See the detailed guide in `docs/qa.md` for step-by-step instructions to generate plots and visually verify minima.
+See `docs/qa.md` for step-by-step instructions to generate plots and visually verify minima and stop loss. Includes a batch mode for multiple symbols.
 
 Quick start:
 - Ensure `FINANCIALMODELINGPREP_API_KEY` is set (env or `.env`).
