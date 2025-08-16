@@ -94,18 +94,12 @@ docker kill project_id
 
 ## Qa for macd minima
 
-You can visually verify weekly MACD local minima with a helper script that fetches data, computes MACD, detects minima, and saves a plot.
+See the detailed guide in `docs/qa.md` for step-by-step instructions to generate plots and visually verify minima.
 
-- Requirements:
-  - **API key**: set `FINANCIALMODELINGPREP_API_KEY` in your shell or `.env`.
-  - **Docker dev image**: build the development image.
-
-- Build the dev image:
-```shell
-docker build --target development -t stop_loss_calculator:dev .
-```
-
-- Run the QA plot (example: AAPL, 10 years of history, window=1):
+Quick start:
+- Ensure `FINANCIALMODELINGPREP_API_KEY` is set (env or `.env`).
+- Build the dev image: `docker build --target development -t stop_loss_calculator:dev .`
+- Run the QA script (outputs saved under `plots/`):
 ```shell
 mkdir -p plots
 docker run --rm -t \
@@ -119,19 +113,3 @@ docker run --rm -t \
     --window 1 \
     --output plots/aapl_macd_minima.png
 ```
-
-- Try a wider local-minima window for more aggressive filtering (example: window=20):
-```shell
-docker run --rm -t \
-  -w /stop_loss_calculator \
-  -e FINANCIALMODELINGPREP_API_KEY=${FINANCIALMODELINGPREP_API_KEY} \
-  -v $(pwd)/plots:/stop_loss_calculator/plots \
-  stop_loss_calculator:dev \
-  python scripts/qa_plot_macd_minima.py \
-    --symbol AAPL \
-    --days 3650 \
-    --window 20 \
-    --output plots/aapl_macd_minima_w20.png
-```
-
-- The PNG files will be available in your local `plots/` directory.
