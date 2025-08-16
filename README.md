@@ -91,3 +91,25 @@ sudo docker ps -a
 ```shell
 docker kill project_id
 ```
+
+## Qa
+
+See `docs/qa.md` for step-by-step instructions to generate plots and visually verify minima and stop loss. Includes a batch mode for multiple symbols.
+
+Quick start:
+- Ensure `FINANCIALMODELINGPREP_API_KEY` is set (env or `.env`).
+- Build the dev image: `docker build --target development -t stop_loss_calculator:dev .`
+- Run the QA script (outputs saved under `plots/`):
+```shell
+mkdir -p plots
+docker run --rm -t \
+  -w /stop_loss_calculator \
+  -e FINANCIALMODELINGPREP_API_KEY=${FINANCIALMODELINGPREP_API_KEY} \
+  -v $(pwd)/plots:/stop_loss_calculator/plots \
+  stop_loss_calculator:dev \
+  python scripts/qa_plot_macd_minima.py \
+    --symbol AAPL \
+    --days 3650 \
+    --window 1 \
+    --output plots/aapl_macd_minima.png
+```
