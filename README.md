@@ -45,6 +45,24 @@ docker run --rm -it -p 127.0.0.1:8000:8000 stop_loss_calculator
 
 http://127.0.0.1:8000/docs
 
+## Docker compose
+
+Prerequisites:
+- Create your `.env` from the example and set your API key:
+```shell
+cp env.example .env
+```
+
+Run with Docker compose:
+```shell
+docker compose up --build
+```
+
+Stop the stack:
+```shell
+docker compose down
+```
+
 ## Environment variables
 The file `env.example` at the project root has an example of all environment variables that need to be set for the project to work properly.
 
@@ -113,3 +131,8 @@ docker run --rm -t \
     --window 1 \
     --output plots/aapl_macd_minima.png
 ```
+
+## Further docs
+
+- API endpoints: see `docs/api.md`
+- QA plotting and batch runs: see `docs/qa.md`
