@@ -2,7 +2,7 @@
 
 This project will help you to calculate the asset stop loss via API
 
-## To build this project with Docker
+## To build this project with docker
 
 Build images with:
 
@@ -19,7 +19,7 @@ You can stop the build at specific stages with the `--target` option:
 docker build --tag stop_loss_calculator . --target <stage>
 ```
 
-For example we wanted to stop at the **test** stage:
+For example, to stop at the test stage:
 
 ```shell
 docker build --tag stop_loss_calculator --target test .
@@ -31,9 +31,9 @@ We could then get a shell inside the container with:
 docker run -it stop_loss_calculator:latest bash
 ```
 
-If you do not specify a target the resulting image will be the last image defined which in our case is the 'production' image.
+If you do not specify a target, the resulting image will be the last stage defined, which in our case is the production image.
 
-To run the project in your local machine:
+To run the project on your local machine:
 
 ```shell
 docker run --rm -it -p 127.0.0.1:8000:8000 stop_loss_calculator
@@ -41,16 +41,16 @@ docker run --rm -it -p 127.0.0.1:8000:8000 stop_loss_calculator
 
 ( The project was dockerized using this example: <https://github.com/svx/poetry-fastapi-docker> )
 
-## Project API documentation
+## Project api documentation
 
 http://127.0.0.1:8000/docs
 
 ## Environment variables
-The file .env.example has en example of all environment variables that need to be set for the project to work properly.
+The file `env.example` at the project root has an example of all environment variables that need to be set for the project to work properly.
 
-Copy and paste this file and rename it to .env. In this new file you have to put the real variables values
+Copy this file to `.env` and set the real variable values:
 ```shell
-cp .env.exmaple .env
+cp env.example .env
 ```
 
 ### Env vars description
@@ -71,25 +71,25 @@ isort app  (file or directory)
 
 ## Development tips
 
-### Prepare the docker image for develop new features
+### Prepare the docker image to develop new features
 ```shell
 docker build --tag stop_loss_calculator . --target development
 ```
 
 ### Run the project allowing code changes
 ```shell
-docker run --rm -it -p 127.0.0.1:8000:8000 -v project_directory:/stop_loss_calculator stop_loss_calculator
+docker run --rm -it -p 127.0.0.1:8000:8000 -v $(pwd):/stop_loss_calculator stop_loss_calculator
 ```
 
 ### Run the project in the background from the terminal (detached mode)
 ```shell
-docker run --rm -it -d -p 127.0.0.1:8000:8000 -v project_directory:/stop_loss_calculator stop_loss_calculator
+docker run --rm -it -d -p 127.0.0.1:8000:8000 -v $(pwd):/stop_loss_calculator stop_loss_calculator
 ```
 ```shell
 sudo docker ps -a
 ```
 ```shell
-docker kill project_id
+docker kill <container_id>
 ```
 
 ## Qa
