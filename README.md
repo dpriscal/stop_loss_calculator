@@ -20,6 +20,11 @@ This project will help you to calculate the asset stop loss via API
 - Market data comes from third parties and may be delayed or inaccurate. Always verify before acting.
 - Past performance does not guarantee future results. Consider consulting a licensed professional.
 
+## Glossary
+
+- **Stop-loss**: a safety-net price you choose in advance. If the market falls to that level, it signals you to exit to limit losses.
+- **MACD**: a way to spot momentum and turning points by comparing two moving averages of price. You can think of it as a "trend strength" line that helps identify potential bottoms and tops.
+
 ## To build this project with docker
 
 Build images with:
