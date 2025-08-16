@@ -2,6 +2,24 @@
 
 This project will help you to calculate the asset stop loss via API
 
+## Benefits for everyone
+
+- **Protect your money**: helps you pick a safety-net price (a "stop-loss") so if the price falls too much, you can decide to exit earlier and limit losses.
+- **Make decisions with facts**: looks at years of past prices to find meaningful low points. You don't need to understand the math.
+- **Spot turning points**: optional charts highlight moments when prices tended to bottom out, so patterns are easy to see.
+- **Use any stock**: provide a ticker like `AAPL` and it fetches the data for you.
+- **Simple setup**: add your API key once, then use friendly URLs or simple commands.
+- **Adjust to your style**: a single "window" setting lets you be stricter or more flexible. The default is fine for beginners.
+- **Automate it**: because it's an API, you can check levels daily from a script or scheduler.
+- **No heavy install**: run it with Docker or Docker compose in a few commands.
+
+## Disclaimer
+
+- This project is for educational and informational purposes only and is not financial advice.
+- You are solely responsible for your investment decisions. Use at your own risk.
+- Market data comes from third parties and may be delayed or inaccurate. Always verify before acting.
+- Past performance does not guarantee future results. Consider consulting a licensed professional.
+
 ## To build this project with docker
 
 Build images with:
