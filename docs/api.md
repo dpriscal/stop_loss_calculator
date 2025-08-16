@@ -8,7 +8,7 @@ This document describes the HTTP endpoints exposed by the service.
 
 ## Authentication
 
-- Set the `FINANCIALMODELINGPREP_API_KEY` environment variable (or provide it via `.env`).
+- Set the `FINANCIALMODELINGPREP_API_KEY` environment variable (or provide it via `.env`) on the server running this service. Clients do not send the key in requests.
 
 ## Endpoints
 
@@ -25,6 +25,11 @@ This document describes the HTTP endpoints exposed by the service.
   "stop_loss": 137.12,
   "stop_loss_date": "2020-06-01T00:00:00"
 }
+```
+
+- Curl example:
+```bash
+curl -s "http://127.0.0.1:8000/stocks/AAPL"
 ```
 
 ### Get macd minima for a symbol
@@ -57,8 +62,19 @@ This document describes the HTTP endpoints exposed by the service.
 ]
 ```
 
+- Curl example (defaults shown explicitly):
+```bash
+curl -s "http://127.0.0.1:8000/stocks/AAPL/macd-minima?period=W&window=1&days=3650"
+```
+
 ## Notes
 
 - Responses use ISO 8601 for dates.
 - MACD is computed as `EMA(12) - EMA(26)` on the resampled close series; a 9-period EMA is the signal line (used in QA plots).
+
+## Status codes
+
+- 200: success
+- 422: invalid request parameters (e.g., non-integer `window`/`days`)
+- 500: server error (e.g., missing `FINANCIALMODELINGPREP_API_KEY` or upstream data issues)
 
