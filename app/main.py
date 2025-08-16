@@ -1,35 +1,26 @@
 from fastapi import FastAPI
+from typing import List
 
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
+from app.schemas import StopLossResponse, MacdMinimaRow
 
 api = FastAPI()
 
 
-@api.get("/stocks/{symbol}")
+@api.get("/stocks/{symbol}", response_model=StopLossResponse)
 async def root(symbol: str):
     f = Financialmodelingprep()
     rows = f.get_stop_loss_rows([symbol])
-    return {
-        "symbol": symbol,
-        "stop_loss": rows[0]["stop_loss"],
-        "stop_loss_date": rows[0]["stop_loss_date"],
-    }
+    first = rows[0] if rows else {"stop_loss": None, "stop_loss_date": None}
+    return StopLossResponse(
+        symbol=symbol,
+        stop_loss=first.get("stop_loss"),
+        stop_loss_date=first.get("stop_loss_date"),
+    )
 
 
-@api.get("/stocks/{symbol}/macd-minima")
+@api.get("/stocks/{symbol}/macd-minima", response_model=List[MacdMinimaRow])
 async def macd_minima(symbol: str, period: str = "W", window: int = 1, days: int = 3650):
     f = Financialmodelingprep()
     rows = f.get_macd_minima_rows(symbol, days=days, periodicity=period, window=window)
-    # Ensure JSON-serializable values
-    out = []
-    for r in rows:
-        out.append(
-            {
-                "symbol": r["symbol"],
-                "date": r["date"].isoformat() if hasattr(r["date"], "isoformat") else str(r["date"]),
-                "macd": float(r["macd"]),
-                "price": float(r["price"]),
-                "period": r["period"],
-            }
-        )
-    return out
+    return [MacdMinimaRow(**r) for r in rows]
