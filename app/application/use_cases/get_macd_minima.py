@@ -15,6 +15,20 @@ def _ensure_datetime_index(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def _resample(df: pd.DataFrame, periodicity: str) -> pd.DataFrame:
+    logic = {
+        "open": "first",
+        "high": "max",
+        "low": "min",
+        "close": "last",
+        "volume": "sum",
+    }
+    df_local = df.set_index("date").resample(periodicity).apply(logic)
+    df_local["date"] = df_local.index
+    df_local.index = range(1, len(df_local) + 1)
+    return df_local
+
+
 def get_macd_minima(
     repo: PriceDataRepository,
     symbol: str,
@@ -32,9 +46,10 @@ def get_macd_minima(
     """
     df = repo.get_stock_data(symbol, days)
     df = _ensure_datetime_index(df).reset_index(drop=True)
+    df_resampled = _resample(df, periodicity)
 
-    macd_series = df["close"]
-    minima_df = get_macd_minima_from_macd(df, macd_series, window=window)
+    macd_series = df_resampled["close"]
+    minima_df = get_macd_minima_from_macd(df_resampled, macd_series, window=window)
 
     rows: List[Dict] = []
     for _, row in minima_df.iterrows():
