@@ -118,42 +118,9 @@ class Financialmodelingprep:
                 return False
         return True
 
-    def get_macd_minima(self, df: pd.DataFrame, periodicity: str = "W", window: int = 1) -> pd.DataFrame:
-        # Ensure periodicity and delegate minima computation to domain service
-        df_resampled = _ensure_datetime_index(df.copy()).reset_index(drop=True)
-        macd = self.getMacd(df_resampled)
+    # get_macd_minima removed in favor of application/domain use cases
 
-        from app.domain.services.macd_minima import (
-            get_macd_minima_from_macd as _domain_get_macd_minima_from_macd,
-        )
-
-        minima = _domain_get_macd_minima_from_macd(df_resampled, macd, window=window)
-        return minima
-
-    def get_macd_minima_rows(self, symbol: str, days: int, periodicity: str = "W", window: int = 1):
-        """
-        Fetch historical data for `symbol`, resample to `periodicity`, compute MACD,
-        detect local minima with `window`, and return a list of dict rows ordered by date.
-        """
-        stock_df = self.getStockData(symbol, days)
-        stock_df = _ensure_datetime_index(stock_df)
-
-        # Resample to target periodicity
-        df_resampled = self.resample(stock_df.copy(), periodicity)
-        macd_minima_df = self.get_macd_minima(df_resampled, periodicity=periodicity, window=window)
-
-        rows = []
-        for _, row in macd_minima_df.iterrows():
-            rows.append(
-                {
-                    "symbol": symbol,
-                    "date": row["date"],
-                    "macd": float(row["macd"]) if row.get("macd") is not None else None,
-                    "price": float(row["price"]) if row.get("price") is not None else None,
-                    "period": periodicity,
-                }
-            )
-        return rows
+    # get_macd_minima_rows removed; use application use case instead
 
 
 def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
