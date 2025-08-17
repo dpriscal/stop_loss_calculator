@@ -119,19 +119,16 @@ class Financialmodelingprep:
         return True
 
     def get_macd_minima(self, df: pd.DataFrame, periodicity: str = "W", window: int = 1) -> pd.DataFrame:
-        # For test-driven step: assume `df` is already at desired periodicity (weekly)
-        # and compute minima directly. Resampling will be handled at the service layer in the next step.
+        # Ensure periodicity and delegate minima computation to domain service
         df_resampled = _ensure_datetime_index(df.copy()).reset_index(drop=True)
         macd = self.getMacd(df_resampled)
 
-        # Find minima indices using the dedicated utility for plateau handling
-        minima_indices = find_local_minima(macd, window=window)
+        from app.domain.services.macd_minima import (
+            get_macd_minima_from_macd as _domain_get_macd_minima_from_macd,
+        )
 
-        # Build result with date, macd, and price
-        selected = _select_indices(df_resampled, minima_indices)
-        selected["macd"] = macd.iloc[minima_indices].values
-        selected = selected.sort_values(by="date").reset_index(drop=True)
-        return selected
+        minima = _domain_get_macd_minima_from_macd(df_resampled, macd, window=window)
+        return minima
 
     def get_macd_minima_rows(self, symbol: str, days: int, periodicity: str = "W", window: int = 1):
         """
