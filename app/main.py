@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from typing import List
 
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
@@ -7,12 +7,17 @@ from app.schemas import StopLossResponse, MacdMinimaRow
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
 from app.application.use_cases.get_macd_minima import get_macd_minima as uc_get_macd_minima
 from app.application.use_cases.get_stop_loss import get_stop_loss as uc_get_stop_loss
+from app.interface.deps import get_repo, get_stop_loss_strategy
 
 api = FastAPI()
 
 
 @api.get("/stocks/{symbol}", response_model=StopLossResponse)
-async def root(symbol: str):
+async def root(
+    symbol: str,
+    repo=Depends(get_repo),
+    strategy=Depends(get_stop_loss_strategy),
+):
     if os.environ.get("USE_LEGACY_STACK") == "1":
         f = Financialmodelingprep()
         rows = f.get_stop_loss_rows([symbol])
@@ -23,13 +28,6 @@ async def root(symbol: str):
             stop_loss_date=first.get("stop_loss_date"),
         )
     # Default: DDD path
-    repo = FmpPriceDataRepository()
-
-    def strategy(sym, stock_df, periodicity, num_elements):
-        # Reuse existing policy implementation for now
-        f = Financialmodelingprep()
-        return f.get_stop_loss(sym, stock_df, False, periodicity, num_elements)
-
     rows = uc_get_stop_loss(
         repo,
         symbols=[symbol],
@@ -46,12 +44,17 @@ async def root(symbol: str):
 
 
 @api.get("/stocks/{symbol}/macd-minima", response_model=List[MacdMinimaRow])
-async def macd_minima(symbol: str, period: str = "W", window: int = 1, days: int = 3650):
+async def macd_minima(
+    symbol: str,
+    period: str = "W",
+    window: int = 1,
+    days: int = 3650,
+    repo=Depends(get_repo),
+):
     if os.environ.get("USE_LEGACY_STACK") == "1":
         f = Financialmodelingprep()
         rows = f.get_macd_minima_rows(symbol, days=days, periodicity=period, window=window)
         return [MacdMinimaRow(**r) for r in rows]
     # Default: DDD path
-    repo = FmpPriceDataRepository()
     rows = uc_get_macd_minima(repo, symbol=symbol, days=days, periodicity=period, window=window)
     return [MacdMinimaRow(**r) for r in rows]
