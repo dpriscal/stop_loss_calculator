@@ -63,18 +63,6 @@ Both Interface and Infrastructure depend inward. Domain never depends on framewo
 
 The suite runs in Docker via the `test` stage; coverage gate is enforced.
 
-## Run modes and flags
-
-- Default runtime uses the DDD path (use cases + adapters). A legacy path can be temporarily enabled by setting `USE_LEGACY_STACK=1` (used by a couple of compatibility tests).
-- API key: The adapter reads `FINANCIALMODELINGPREP_API_KEY` from the environment.
-
-## QA scripts
-
-- Location: `scripts/`
-  - `qa_batch.py`: batch plots for MACD minima and stop-loss
-  - `qa_plot_macd_minima.py`, `qa_plot_stop_loss.py`: single-symbol plots
-- Note: These hit the live FMP API; set `FINANCIALMODELINGPREP_API_KEY` to a valid key before running.
-
 ## Why this design
 
 - Clear separation of concerns and inward-only dependencies
