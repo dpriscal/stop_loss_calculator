@@ -6,9 +6,14 @@ from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRe
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
 
 
-def test_root_endpoint(testclient: TestClient):
-    r = testclient.get("/stocks/FB")
-    assert r.status_code == 200
+def test_root_endpoint(testclient: TestClient, monkeypatch):
+    # Force legacy path
+    os.environ["USE_LEGACY_STACK"] = "1"
+    try:
+        r = testclient.get("/stocks/FB")
+        assert r.status_code == 200
+    finally:
+        os.environ.pop("USE_LEGACY_STACK", None)
 
 
 def test_root_endpoint_ddd_stack(testclient: TestClient, monkeypatch):

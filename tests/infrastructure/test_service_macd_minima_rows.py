@@ -1,6 +1,7 @@
 import pandas as pd
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep
+from app.application.use_cases.get_macd_minima import get_macd_minima
+from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
 
 
 def _make_weekly_df(values: list[float]) -> pd.DataFrame:
@@ -23,17 +24,13 @@ def test_get_macd_minima_rows_returns_minima_list(monkeypatch):
     prices = [3, 2, 1, 1, 2, 3]
     df = _make_weekly_df(prices)
 
-    f = Financialmodelingprep()
-
-    # Avoid network; supply data and MACD directly
-    monkeypatch.setattr(Financialmodelingprep, "getStockData", lambda self, s, d: df)
+    # Avoid network; supply repo data directly
     monkeypatch.setattr(
-        Financialmodelingprep,
-        "getMacd",
-        lambda self, x: pd.Series([3, 2, 1, 1, 2, 3], index=x.index),
+        FmpPriceDataRepository,
+        "get_stock_data",
+        lambda self, s, d: df,
     )
-
-    rows = f.get_macd_minima_rows("SYM", days=100, periodicity="W", window=1)
+    rows = get_macd_minima(FmpPriceDataRepository(api_key="dummy"), symbol="SYM", days=100, periodicity="W", window=1)
 
     # Expect only the first index of the plateau kept
     assert isinstance(rows, list)
@@ -49,16 +46,8 @@ def test_get_macd_minima_rows_is_sorted_by_date(monkeypatch):
     prices = [5, 4, 3, 4, 3, 4, 5]
     df = _make_weekly_df(prices)
 
-    f = Financialmodelingprep()
-
-    monkeypatch.setattr(Financialmodelingprep, "getStockData", lambda self, s, d: df)
-    monkeypatch.setattr(
-        Financialmodelingprep,
-        "getMacd",
-        lambda self, x: pd.Series([5, 4, 3, 4, 3, 4, 5], index=x.index),
-    )
-
-    rows = f.get_macd_minima_rows("ABC", days=100, periodicity="W", window=1)
+    monkeypatch.setattr(FmpPriceDataRepository, "get_stock_data", lambda self, s, d: df)
+    rows = get_macd_minima(FmpPriceDataRepository(api_key="dummy"), symbol="ABC", days=100, periodicity="W", window=1)
 
     assert [r["date"] for r in rows] == [df.loc[2, "date"], df.loc[4, "date"]]
     assert [r["macd"] for r in rows] == [3, 3]
@@ -87,13 +76,8 @@ def test_get_macd_minima_rows_daily_period(monkeypatch):
     prices = [5, 4, 3, 4, 3, 4, 5]
     df = _make_daily_df(prices, start="2020-01-01")
 
-    f = Financialmodelingprep()
-    monkeypatch.setattr(Financialmodelingprep, "getStockData", lambda self, s, d: df)
-    monkeypatch.setattr(
-        Financialmodelingprep, "getMacd", lambda self, x: pd.Series(prices, index=x.index)
-    )
-
-    rows = f.get_macd_minima_rows("DLY", days=100, periodicity="D", window=1)
+    monkeypatch.setattr(FmpPriceDataRepository, "get_stock_data", lambda self, s, d: df)
+    rows = get_macd_minima(FmpPriceDataRepository(api_key="dummy"), symbol="DLY", days=100, periodicity="D", window=1)
 
     assert [r["date"] for r in rows] == [df.loc[2, "date"], df.loc[4, "date"]]
     assert [r["macd"] for r in rows] == [3, 3]
@@ -129,15 +113,8 @@ def test_get_macd_minima_rows_monthly_period(monkeypatch):
     month_end_vals = [5, 4, 3, 4, 5]
     df = _make_daily_over_months(month_end_vals)
 
-    f = Financialmodelingprep()
-    monkeypatch.setattr(Financialmodelingprep, "getStockData", lambda self, s, d: df)
-    # getMacd returns one value per resampled month
-    def fake_macd(local_df):
-        return pd.Series(month_end_vals, index=local_df.index)
-
-    monkeypatch.setattr(Financialmodelingprep, "getMacd", lambda self, x: fake_macd(x))
-
-    rows = f.get_macd_minima_rows("MON", days=1000, periodicity="M", window=1)
+    monkeypatch.setattr(FmpPriceDataRepository, "get_stock_data", lambda self, s, d: df)
+    rows = get_macd_minima(FmpPriceDataRepository(api_key="dummy"), symbol="MON", days=1000, periodicity="M", window=1)
 
     # Expect single minimum at the third month
     # Resampling will set the date to month-end

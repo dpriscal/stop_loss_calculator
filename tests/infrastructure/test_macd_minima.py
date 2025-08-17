@@ -1,6 +1,6 @@
 import pandas as pd
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep
+from app.domain.services.macd_minima import get_macd_minima_from_macd
 
 
 def _make_weekly_df(values: list[float]) -> pd.DataFrame:
@@ -19,41 +19,25 @@ def _make_weekly_df(values: list[float]) -> pd.DataFrame:
     return df
 
 
-def test_get_macd_minima_uses_minima_indices_and_maps_price(monkeypatch):
-    # Create a simple weekly series; we'll monkeypatch MACD to a known shape
+def test_get_macd_minima_uses_minima_indices_and_maps_price():
     prices = [3, 2, 1, 1, 2, 3]
     df = _make_weekly_df(prices)
+    macd = pd.Series([3, 2, 1, 1, 2, 3], index=df.index)
 
-    f = Financialmodelingprep()
+    minima = get_macd_minima_from_macd(df, macd, window=1)
 
-    def fake_get_macd(local_df):
-        # Return a series with a plateau minimum at indices 2 and 3
-        return pd.Series([3, 2, 1, 1, 2, 3], index=local_df.index)
-
-    monkeypatch.setattr(Financialmodelingprep, "getMacd", lambda self, x: fake_get_macd(x))
-
-    minima = f.get_macd_minima(df, periodicity="W", window=1)
-
-    # Expect only the first index of the plateau to be kept
     assert list(minima["date"]) == [df.loc[2, "date"]]
     assert list(minima["macd"]) == [1]
     assert list(minima["price"]) == [df.loc[2, "close"]]
 
 
-def test_get_macd_minima_sorted_by_date(monkeypatch):
+def test_get_macd_minima_sorted_by_date():
     prices = [5, 4, 3, 4, 3, 4, 5]
     df = _make_weekly_df(prices)
+    macd = pd.Series([5, 4, 3, 4, 3, 4, 5], index=df.index)
 
-    f = Financialmodelingprep()
+    minima = get_macd_minima_from_macd(df, macd, window=1)
 
-    def fake_get_macd(local_df):
-        return pd.Series([5, 4, 3, 4, 3, 4, 5], index=local_df.index)
-
-    monkeypatch.setattr(Financialmodelingprep, "getMacd", lambda self, x: fake_get_macd(x))
-
-    minima = f.get_macd_minima(df, periodicity="W", window=1)
-
-    # Two minima at indices 2 and 4, ensure ascending by date
     assert list(minima["date"]) == [df.loc[2, "date"], df.loc[4, "date"]]
     assert list(minima["macd"]) == [3, 3]
     assert list(minima["price"]) == [df.loc[2, "close"], df.loc[4, "close"]]
