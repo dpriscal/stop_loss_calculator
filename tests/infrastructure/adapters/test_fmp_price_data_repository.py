@@ -3,11 +3,20 @@ import pytest
 
 
 class DummyResponse:
-    def __init__(self, payload):
+    """
+    A minimal mock of requests.Response for testing.
+    Allows setting status_code and raising for status, and returns a payload via .json().
+    """
+    def __init__(self, payload, status_code=200):
         self._payload = payload
+        self.status_code = status_code
 
-    def json(self):  # mimic requests.Response.json()
+    def json(self):
         return self._payload
+
+    def raise_for_status(self):
+        if not (200 <= self.status_code < 300):
+            raise Exception(f"HTTP {self.status_code}")
 
 
 def test_get_stock_data(monkeypatch):
@@ -35,7 +44,7 @@ def test_get_stock_data(monkeypatch):
         ]
     }
 
-    def fake_get(url):
+    def fake_get(url, params=None, timeout=None):
         return DummyResponse(payload)
 
     import requests
@@ -48,5 +57,4 @@ def test_get_stock_data(monkeypatch):
     assert isinstance(df, pd.DataFrame)
     assert set(["date", "open", "high", "low", "close", "volume"]) <= set(df.columns)
     assert len(df) == 2
-
 

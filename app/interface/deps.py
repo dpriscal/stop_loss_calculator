@@ -17,7 +17,10 @@ def get_repo(settings: AppSettings = Depends(get_settings)) -> PriceDataReposito
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="FINANCIALMODELINGPREP_API_KEY not configured",
         )
-    return FmpPriceDataRepository(api_key=api_key)
+    try:
+        return FmpPriceDataRepository(api_key=api_key)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
 
 
 def get_stop_loss_strategy() -> Callable:
