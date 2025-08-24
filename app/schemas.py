@@ -33,5 +33,3 @@ class MacdMinimaRow(BaseModel):
     @validator("macd", "price", pre=True)
     def _coerce_non_finite_fields(cls, v):
         return _coerce_non_finite(v)
-
-

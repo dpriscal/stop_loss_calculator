@@ -10,5 +10,3 @@ class MacdCalculator(Protocol):
 
     def get_macd(self, df: pd.DataFrame) -> pd.Series:  # pragma: no cover - interface
         ...
-
-

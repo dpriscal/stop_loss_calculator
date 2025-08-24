@@ -64,5 +64,3 @@ def get_macd_minima(
         )
 
     return rows
-
-

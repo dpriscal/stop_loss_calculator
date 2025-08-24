@@ -52,5 +52,3 @@ def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
         deduped.append(idx)
 
     return deduped
-
-

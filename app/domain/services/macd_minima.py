@@ -36,5 +36,3 @@ def get_macd_minima_from_macd(
     selected["macd"] = macd.reset_index(drop=True).iloc[minima_indices].values
     selected = selected.sort_values(by="date").reset_index(drop=True)
     return selected
-
-

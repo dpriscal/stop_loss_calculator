@@ -3,8 +3,9 @@ from typing import List
 
 from fastapi import Depends, FastAPI
 
-from app.application.use_cases.get_macd_minima import \
-    get_macd_minima as uc_get_macd_minima
+from app.application.use_cases.get_macd_minima import (
+    get_macd_minima as uc_get_macd_minima,
+)
 from app.application.use_cases.get_stop_loss import get_stop_loss as uc_get_stop_loss
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
@@ -55,8 +56,12 @@ async def macd_minima(
 ):
     if os.environ.get("USE_LEGACY_STACK") == "1":
         f = Financialmodelingprep()
-        rows = f.get_macd_minima_rows(symbol, days=days, periodicity=period, window=window)
+        rows = f.get_macd_minima_rows(
+            symbol, days=days, periodicity=period, window=window
+        )
         return [MacdMinimaRow(**r) for r in rows]
     # Default: DDD path
-    rows = uc_get_macd_minima(repo, symbol=symbol, days=days, periodicity=period, window=window)
+    rows = uc_get_macd_minima(
+        repo, symbol=symbol, days=days, periodicity=period, window=window
+    )
     return [MacdMinimaRow(**r) for r in rows]

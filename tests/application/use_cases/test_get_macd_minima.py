@@ -38,5 +38,3 @@ def test_use_case_returns_rows_in_order_with_expected_fields():
     assert [r["macd"] for r in rows] == [3, 3]
     assert [r["price"] for r in rows] == [df.loc[2, "close"], df.loc[4, "close"]]
     assert all(r["symbol"] == "ABC" and r["period"] == "W" for r in rows)
-
-

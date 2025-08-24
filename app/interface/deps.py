@@ -29,5 +29,3 @@ def get_stop_loss_strategy() -> Callable:
         return f.get_stop_loss(symbol, stock_df, False, periodicity, num_elements)
 
     return strategy
-
-

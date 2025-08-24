@@ -44,4 +44,3 @@ class FmpPriceDataRepository(PriceDataRepository):
         if df.empty:
             raise RuntimeError(f"No historical data returned for symbol '{symbol}'")
         return df
-

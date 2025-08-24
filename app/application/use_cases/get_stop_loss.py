@@ -52,5 +52,3 @@ def get_stop_loss(
         )
 
     return results
-
-

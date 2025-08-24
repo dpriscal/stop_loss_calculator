@@ -20,7 +20,10 @@ def test_root_endpoint(testclient: TestClient, monkeypatch):
 def test_root_endpoint_ddd_stack(testclient: TestClient, monkeypatch):
     os.environ["USE_DDD_STACK"] = "1"
     try:
-        def _make_daily_df(values: list[float], start: str = "2020-01-01") -> pd.DataFrame:
+
+        def _make_daily_df(
+            values: list[float], start: str = "2020-01-01"
+        ) -> pd.DataFrame:
             n = len(values)
             dates = pd.date_range(start, periods=n, freq="D")
             df = pd.DataFrame(
