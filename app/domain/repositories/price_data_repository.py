@@ -12,11 +12,11 @@ class PriceDataRepository(ABC):
     """
 
     @abstractmethod
-    def get_stock_data(self, symbol: str, days: int) -> pd.DataFrame:  # pragma: no cover - interface
+    def get_stock_data(
+        self, symbol: str, days: int
+    ) -> pd.DataFrame:  # pragma: no cover - interface
         """Return a DataFrame of OHLCV rows for the given symbol.
 
         Expected columns include: date, open, high, low, close, volume.
         """
         raise NotImplementedError
-
-

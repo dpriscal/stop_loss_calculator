@@ -48,5 +48,3 @@ def test_get_macd_minima_sorted_by_date():
     assert list(minima["date"]) == [df.loc[2, "date"], df.loc[4, "date"]]
     assert list(minima["macd"]) == [3, 3]
     assert list(minima["price"]) == [df.loc[2, "close"], df.loc[4, "close"]]
-
-

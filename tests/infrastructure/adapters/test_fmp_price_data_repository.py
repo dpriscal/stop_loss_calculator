@@ -7,6 +7,7 @@ class DummyResponse:
     A minimal mock of requests.Response for testing.
     Allows setting status_code and raising for status, and returns a payload via .json().
     """
+
     def __init__(self, payload, status_code=200):
         self._payload = payload
         self.status_code = status_code
@@ -20,7 +21,9 @@ class DummyResponse:
 
 
 def test_get_stock_data(monkeypatch):
-    from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
+    from app.infrastructure.adapters.fmp_price_data_repository import (
+        FmpPriceDataRepository,
+    )
 
     # Fake payload matching FMP shape
     payload = {
@@ -57,4 +60,3 @@ def test_get_stock_data(monkeypatch):
     assert isinstance(df, pd.DataFrame)
     assert set(["date", "open", "high", "low", "close", "volume"]) <= set(df.columns)
     assert len(df) == 2
-

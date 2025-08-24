@@ -20,9 +20,15 @@ def main():
         default="AAPL,MSFT,AMZN,GOOGL,META,TSLA,NVDA,JPM,BAC,NFLX",
         help="Comma-separated list of tickers",
     )
-    parser.add_argument("--days", type=int, default=3650, help="Days of history to fetch")
-    parser.add_argument("--period", default="W", help="Resampling period for stop loss plot")
-    parser.add_argument("--window", type=int, default=1, help="Local-minima window size")
+    parser.add_argument(
+        "--days", type=int, default=3650, help="Days of history to fetch"
+    )
+    parser.add_argument(
+        "--period", default="W", help="Resampling period for stop loss plot"
+    )
+    parser.add_argument(
+        "--window", type=int, default=1, help="Local-minima window size"
+    )
     parser.add_argument(
         "--outdir", default="plots", help="Directory to save PNG outputs"
     )
@@ -52,5 +58,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

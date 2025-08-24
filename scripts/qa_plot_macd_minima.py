@@ -11,7 +11,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep, find_local_minima
+from app.infrastructure.financialmodelingprep import (
+    Financialmodelingprep,
+    find_local_minima,
+)
 
 
 def plot_macd_with_minima(symbol: str, days: int, window: int, output: str) -> str:
@@ -79,8 +82,12 @@ def plot_macd_with_minima(symbol: str, days: int, window: int, output: str) -> s
 def main():
     parser = argparse.ArgumentParser(description="QA plot: MACD minima for a symbol")
     parser.add_argument("--symbol", required=True, help="Ticker symbol, e.g., AAPL")
-    parser.add_argument("--days", type=int, default=3650, help="Days of history to fetch")
-    parser.add_argument("--window", type=int, default=1, help="Local minima window size")
+    parser.add_argument(
+        "--days", type=int, default=3650, help="Days of history to fetch"
+    )
+    parser.add_argument(
+        "--window", type=int, default=1, help="Local minima window size"
+    )
     parser.add_argument(
         "--output",
         default="plots/macd_minima.png",
@@ -94,5 +101,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

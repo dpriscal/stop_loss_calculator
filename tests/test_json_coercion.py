@@ -1,13 +1,16 @@
-import numpy as np
 import os
+
+import numpy as np
 import pandas as pd
 from starlette.testclient import TestClient
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
+from app.infrastructure.financialmodelingprep import Financialmodelingprep
 
 
-def test_root_endpoint_coerces_non_finite_stop_loss(testclient: TestClient, monkeypatch):
+def test_root_endpoint_coerces_non_finite_stop_loss(
+    testclient: TestClient, monkeypatch
+):
     # Force legacy path for this test
     os.environ["USE_LEGACY_STACK"] = "1"
     try:
@@ -36,7 +39,9 @@ def test_root_endpoint_coerces_non_finite_stop_loss(testclient: TestClient, monk
         os.environ.pop("USE_LEGACY_STACK", None)
 
 
-def test_macd_minima_endpoint_coerces_non_finite_fields(testclient: TestClient, monkeypatch):
+def test_macd_minima_endpoint_coerces_non_finite_fields(
+    testclient: TestClient, monkeypatch
+):
     # DDD path: avoid network and inject non-finite values via domain service
     # Provide a minimal deterministic DataFrame through the repository
     dates = pd.date_range("2020-01-05", periods=3, freq="W")
@@ -50,7 +55,9 @@ def test_macd_minima_endpoint_coerces_non_finite_fields(testclient: TestClient, 
             "volume": [100] * 3,
         }
     )
-    monkeypatch.setattr(FmpPriceDataRepository, "get_stock_data", lambda self, symbol, days: df)
+    monkeypatch.setattr(
+        FmpPriceDataRepository, "get_stock_data", lambda self, symbol, days: df
+    )
 
     # Monkeypatch use case's imported minima function to include NaN and Inf
     import app.application.use_cases.get_macd_minima as uc_mod
@@ -65,7 +72,9 @@ def test_macd_minima_endpoint_coerces_non_finite_fields(testclient: TestClient, 
         )
         return out
 
-    monkeypatch.setattr(uc_mod, "get_macd_minima_from_macd", fake_get_macd_minima_from_macd)
+    monkeypatch.setattr(
+        uc_mod, "get_macd_minima_from_macd", fake_get_macd_minima_from_macd
+    )
 
     r = testclient.get("/stocks/ABC/macd-minima?period=W&window=2&days=100")
     # Expect success and presence of both rows with nulls for non-finite values
@@ -76,5 +85,3 @@ def test_macd_minima_endpoint_coerces_non_finite_fields(testclient: TestClient, 
     assert data[0]["macd"] is None and data[0]["price"] == 100.0
     assert data[1]["symbol"] == "ABC" and data[1]["date"] == dates[1].isoformat()
     assert data[1]["macd"] == 2.5 and data[1]["price"] is None
-
-

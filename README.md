@@ -110,6 +110,38 @@ black app (file or directory)
 isort app  (file or directory)
 ```
 
+### Code formatting with docker
+
+Run formatting tools inside Docker so changes are written to your working tree:
+
+1. Build the development image (contains isort/black):
+```shell
+docker build --target development -t stop_loss_calculator:dev .
+```
+
+2. Sort imports (isort):
+```shell
+docker run --rm \
+  -v $(pwd):/stop_loss_calculator \
+  -w /stop_loss_calculator \
+  stop_loss_calculator:dev \
+  isort --settings-path ./pyproject.toml .
+```
+
+3. Format code (black):
+```shell
+docker run --rm \
+  -v $(pwd):/stop_loss_calculator \
+  -w /stop_loss_calculator \
+  stop_loss_calculator:dev \
+  black --config ./pyproject.toml .
+```
+
+4. Verify formatting via the lint stage (check-only):
+```shell
+docker build --target lint -t stop_loss_calculator:lint .
+```
+
 ## Development tips
 
 ### Prepare the docker image to develop new features

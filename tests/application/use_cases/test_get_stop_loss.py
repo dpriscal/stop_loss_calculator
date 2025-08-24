@@ -57,5 +57,3 @@ def test_use_case_get_stop_loss_with_strategy_callable():
     assert rows[1]["current_price"] == float(df_abc.iloc[0].close)
     assert rows[1]["stop_loss"] == 67.89
     assert rows[1]["period"] == "W"
-
-

@@ -1,4 +1,5 @@
 import math
+
 import pandas as pd
 
 from app.domain.services.local_minima import find_local_minima
@@ -33,5 +34,3 @@ def test_find_local_minima_multiple_minima_in_order():
     s = pd.Series([5, 4, 3, 4, 3, 4, 5])
     idxs = find_local_minima(s, window=1)
     assert idxs == [2, 4]
-
-

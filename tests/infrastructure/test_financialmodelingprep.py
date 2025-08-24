@@ -34,6 +34,7 @@ def test_get_stop_loss_rows(monkeypatch):
 
     # Avoid network dependency in tests; provide deterministic DataFrame
     import pandas as pd
+
     df_fb = pd.DataFrame(
         {
             "date": pd.date_range("2020-01-01", periods=10, freq="D"),
@@ -61,7 +62,9 @@ def test_get_stop_loss_rows(monkeypatch):
     monkeypatch.setattr(Financialmodelingprep, "getStockData", fake_get_stock_data)
 
     # Also bypass heavy stop-loss calculation to make test deterministic
-    def fake_get_stop_loss(self, symbol, stock_data, plotData, periodicity, num_elements):
+    def fake_get_stop_loss(
+        self, symbol, stock_data, plotData, periodicity, num_elements
+    ):
         return {
             "symbol": symbol,
             "current_price": float(stock_data.iloc[0].close),

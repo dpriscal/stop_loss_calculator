@@ -1,7 +1,8 @@
 import os
+
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
 import requests
 from dotenv import dotenv_values
 
@@ -12,7 +13,9 @@ class Financialmodelingprep:
         key_from_env = os.environ.get("FINANCIALMODELINGPREP_API_KEY")
         financial_api_key = key_from_env or config.get("FINANCIALMODELINGPREP_API_KEY")
         if not financial_api_key:
-            raise RuntimeError("FINANCIALMODELINGPREP_API_KEY is not set in env or .env")
+            raise RuntimeError(
+                "FINANCIALMODELINGPREP_API_KEY is not set in env or .env"
+            )
 
         self.financial_api_key = financial_api_key
 
@@ -128,7 +131,7 @@ def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
     from app.domain.services.local_minima import (
         find_local_minima as _domain_find_local_minima,
     )
- 
+
     return _domain_find_local_minima(series, window)
 
 
@@ -143,6 +146,3 @@ def _select_indices(df: pd.DataFrame, indices: list[int]) -> pd.DataFrame:
     out = df.iloc[indices][["date", "close"]].copy()
     out.rename(columns={"close": "price"}, inplace=True)
     return out
-
-
- 

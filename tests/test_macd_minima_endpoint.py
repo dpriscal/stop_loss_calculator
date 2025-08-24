@@ -1,6 +1,7 @@
-from starlette.testclient import TestClient
 import os
+
 import pandas as pd
+from starlette.testclient import TestClient
 
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
 
@@ -42,7 +43,9 @@ def test_macd_minima_endpoint_returns_rows(testclient: TestClient, monkeypatch):
     assert data[0]["period"] == "W"
 
 
-def test_macd_minima_endpoint_returns_rows_ddd_stack(testclient: TestClient, monkeypatch):
+def test_macd_minima_endpoint_returns_rows_ddd_stack(
+    testclient: TestClient, monkeypatch
+):
     # Backward-compatible alias; behavior mirrors the default DDD path
     def _make_weekly_df(values: list[float]) -> pd.DataFrame:
         n = len(values)
@@ -77,4 +80,3 @@ def test_macd_minima_endpoint_returns_rows_ddd_stack(testclient: TestClient, mon
     assert data[0]["macd"] == 3.0
     assert data[0]["price"] == df.loc[2, "close"]
     assert data[0]["period"] == "W"
-
