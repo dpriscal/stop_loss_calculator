@@ -1,7 +1,7 @@
 import math
 import pandas as pd
 
-from app.infrastructure.financialmodelingprep import find_local_minima
+from app.domain.services.local_minima import find_local_minima
 
 
 def test_find_local_minima_simple_valley():

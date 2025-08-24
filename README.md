@@ -159,3 +159,4 @@ docker run --rm -t \
 
 - API endpoints: see `docs/api.md`
 - QA plotting and batch runs: see `docs/qa.md`
+- Architecture and layering: see `docs/architecture.md`

@@ -118,100 +118,18 @@ class Financialmodelingprep:
                 return False
         return True
 
-    def get_macd_minima(self, df: pd.DataFrame, periodicity: str = "W", window: int = 1) -> pd.DataFrame:
-        # For test-driven step: assume `df` is already at desired periodicity (weekly)
-        # and compute minima directly. Resampling will be handled at the service layer in the next step.
-        df_resampled = _ensure_datetime_index(df.copy()).reset_index(drop=True)
-        macd = self.getMacd(df_resampled)
+    # get_macd_minima removed in favor of application/domain use cases
 
-        # Find minima indices using the dedicated utility for plateau handling
-        minima_indices = find_local_minima(macd, window=window)
-
-        # Build result with date, macd, and price
-        selected = _select_indices(df_resampled, minima_indices)
-        selected["macd"] = macd.iloc[minima_indices].values
-        selected = selected.sort_values(by="date").reset_index(drop=True)
-        return selected
-
-    def get_macd_minima_rows(self, symbol: str, days: int, periodicity: str = "W", window: int = 1):
-        """
-        Fetch historical data for `symbol`, resample to `periodicity`, compute MACD,
-        detect local minima with `window`, and return a list of dict rows ordered by date.
-        """
-        stock_df = self.getStockData(symbol, days)
-        stock_df = _ensure_datetime_index(stock_df)
-
-        # Resample to target periodicity
-        df_resampled = self.resample(stock_df.copy(), periodicity)
-        macd_minima_df = self.get_macd_minima(df_resampled, periodicity=periodicity, window=window)
-
-        rows = []
-        for _, row in macd_minima_df.iterrows():
-            rows.append(
-                {
-                    "symbol": symbol,
-                    "date": row["date"],
-                    "macd": float(row["macd"]) if row.get("macd") is not None else None,
-                    "price": float(row["price"]) if row.get("price") is not None else None,
-                    "period": periodicity,
-                }
-            )
-        return rows
+    # get_macd_minima_rows removed; use application use case instead
 
 
 def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
-    """
-    Return 0-based indices of local minima within a sliding neighborhood of size `window`.
-
-    Rules:
-    - Only consider interior points (exclude first and last index).
-    - A point is a local minimum if it is <= all non-NaN neighbors within `window`
-      AND strictly < at least one neighbor (to avoid selecting flat-only regions).
-    - For flat plateaus that qualify as minima, return only the first index in the plateau.
-    - NaNs are ignored in comparisons; if all neighbors are NaN, the point is not selected.
-    """
-    if series is None or len(series) < 3:
-        return []
-
-    values = series.to_numpy()
-    n = len(values)
-    minima_indices: list[int] = []
-
-    for i in range(1, n - 1):
-        center = values[i]
-        if np.isnan(center):
-            continue
-
-        start = max(0, i - window)
-        end = min(n - 1, i + window)
-
-        # Build list of neighbor values excluding self and NaNs
-        neighbor_idxs = [j for j in range(start, end + 1) if j != i]
-        neighbor_vals = [values[j] for j in neighbor_idxs if not np.isnan(values[j])]
-
-        if len(neighbor_vals) == 0:
-            continue
-
-        is_not_greater_than_any = all(center <= v for v in neighbor_vals)
-        is_strictly_less_than_some = any(center < v for v in neighbor_vals)
-
-        if is_not_greater_than_any and is_strictly_less_than_some:
-            # Tentatively add as minima
-            minima_indices.append(i)
-
-    # Collapse consecutive equal-valued minima (plateaus): keep only the first index
-    deduped: list[int] = []
-    for idx in minima_indices:
-        if len(deduped) == 0:
-            deduped.append(idx)
-            continue
-        prev = deduped[-1]
-        if idx == prev + 1 and values[idx] == values[prev]:
-            # same plateau, skip later index
-            continue
-        deduped.append(idx)
-
-    return deduped
+    """Compatibility wrapper delegating to the domain service implementation."""
+    from app.domain.services.local_minima import (
+        find_local_minima as _domain_find_local_minima,
+    )
+ 
+    return _domain_find_local_minima(series, window)
 
 
 def _ensure_datetime_index(df: pd.DataFrame) -> pd.DataFrame:
