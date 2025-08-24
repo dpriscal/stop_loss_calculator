@@ -1,7 +1,8 @@
 import os
+
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
 import requests
 from dotenv import dotenv_values
 
@@ -125,9 +126,8 @@ class Financialmodelingprep:
 
 def find_local_minima(series: pd.Series, window: int = 1) -> list[int]:
     """Compatibility wrapper delegating to the domain service implementation."""
-    from app.domain.services.local_minima import (
-        find_local_minima as _domain_find_local_minima,
-    )
+    from app.domain.services.local_minima import \
+        find_local_minima as _domain_find_local_minima
  
     return _domain_find_local_minima(series, window)
 

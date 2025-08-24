@@ -1,13 +1,15 @@
 import os
-from fastapi import FastAPI, Depends
 from typing import List
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep
-from app.schemas import StopLossResponse, MacdMinimaRow
-from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
-from app.application.use_cases.get_macd_minima import get_macd_minima as uc_get_macd_minima
+from fastapi import Depends, FastAPI
+
+from app.application.use_cases.get_macd_minima import \
+    get_macd_minima as uc_get_macd_minima
 from app.application.use_cases.get_stop_loss import get_stop_loss as uc_get_stop_loss
+from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
+from app.infrastructure.financialmodelingprep import Financialmodelingprep
 from app.interface.deps import get_repo, get_stop_loss_strategy
+from app.schemas import MacdMinimaRow, StopLossResponse
 
 api = FastAPI()
 

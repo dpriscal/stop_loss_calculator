@@ -20,7 +20,9 @@ class DummyResponse:
 
 
 def test_get_stock_data(monkeypatch):
-    from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
+    from app.infrastructure.adapters.fmp_price_data_repository import (
+        FmpPriceDataRepository,
+    )
 
     # Fake payload matching FMP shape
     payload = {

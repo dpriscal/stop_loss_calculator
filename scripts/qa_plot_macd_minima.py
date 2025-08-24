@@ -11,7 +11,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep, find_local_minima
+from app.infrastructure.financialmodelingprep import (
+    Financialmodelingprep,
+    find_local_minima,
+)
 
 
 def plot_macd_with_minima(symbol: str, days: int, window: int, output: str) -> str:

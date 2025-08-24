@@ -1,4 +1,5 @@
 import math
+
 import pandas as pd
 
 from app.domain.services.local_minima import find_local_minima

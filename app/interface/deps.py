@@ -7,7 +7,7 @@ from fastapi import Depends, HTTPException, status
 from app.domain.repositories import PriceDataRepository
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
-from app.interface.settings import get_settings, AppSettings
+from app.interface.settings import AppSettings, get_settings
 
 
 def get_repo(settings: AppSettings = Depends(get_settings)) -> PriceDataRepository:

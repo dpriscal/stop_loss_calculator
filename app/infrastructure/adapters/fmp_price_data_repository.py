@@ -4,7 +4,7 @@ from typing import Optional
 
 import pandas as pd
 import requests
-from requests import Response, RequestException
+from requests import RequestException, Response
 
 from app.domain.repositories import PriceDataRepository
 

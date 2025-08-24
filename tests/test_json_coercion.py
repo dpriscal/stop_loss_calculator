@@ -1,10 +1,11 @@
-import numpy as np
 import os
+
+import numpy as np
 import pandas as pd
 from starlette.testclient import TestClient
 
-from app.infrastructure.financialmodelingprep import Financialmodelingprep
 from app.infrastructure.adapters.fmp_price_data_repository import FmpPriceDataRepository
+from app.infrastructure.financialmodelingprep import Financialmodelingprep
 
 
 def test_root_endpoint_coerces_non_finite_stop_loss(testclient: TestClient, monkeypatch):

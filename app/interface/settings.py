@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Optional
 
 try:
-    from dotenv import load_dotenv, dotenv_values  # type: ignore
+    from dotenv import dotenv_values, load_dotenv  # type: ignore
 except ImportError:  # pragma: no cover - optional dependency in production
     load_dotenv = None
     dotenv_values = None
