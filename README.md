@@ -177,13 +177,12 @@ Quick start:
 mkdir -p plots
 docker run --rm -t \
   -w /stop_loss_calculator \
-  -e FINANCIALMODELINGPREP_API_KEY=${FINANCIALMODELINGPREP_API_KEY} \
   -v $(pwd)/plots:/stop_loss_calculator/plots \
-  stop_loss_calculator:dev \
+  stop_loss_calculator \
   python scripts/qa_plot_macd_minima.py \
     --symbol AAPL \
     --days 3650 \
-    --window 1 \
+    --window 20 \
     --output plots/aapl_macd_minima.png
 ```
 
