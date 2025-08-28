@@ -11,6 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from app.domain.services.ema_macd_calculator import EmaMacdCalculator
 from app.infrastructure.financialmodelingprep import Financialmodelingprep
 
 
@@ -35,7 +36,7 @@ def plot_stop_loss(
 
     # Build weekly data for plotting (chronological)
     df_weekly = f.resample(df_raw.copy(), period)
-    macd = f.getMacd(df_weekly)
+    macd = EmaMacdCalculator().get_macd(df_weekly)
 
     dates = pd.to_datetime(df_weekly["date"])  # ensure datetime
 

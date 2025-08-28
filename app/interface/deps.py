@@ -10,7 +10,9 @@ from app.infrastructure.financialmodelingprep import Financialmodelingprep
 from app.interface.settings import AppSettings, get_settings
 
 
-def get_repo(settings: AppSettings = Depends(get_settings)) -> PriceDataRepository:
+def get_data_repository(
+    settings: AppSettings = Depends(get_settings),
+) -> PriceDataRepository:
     api_key = settings.FINANCIALMODELINGPREP_API_KEY
     if not api_key:
         raise HTTPException(
