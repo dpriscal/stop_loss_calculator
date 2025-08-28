@@ -6,6 +6,8 @@ import pandas as pd
 import requests
 from dotenv import dotenv_values
 
+from app.domain.services.ema_macd_calculator import EmaMacdCalculator
+
 
 class Financialmodelingprep:
     def __init__(self):
@@ -95,9 +97,8 @@ class Financialmodelingprep:
         plt.show()
 
     def getMacd(self, df):
-        exp12 = self.getExp(df.close, 12)
-        exp26 = self.getExp(df.close, 26)
-        return exp12 - exp26
+        # Delegate to domain calculator for consistency
+        return EmaMacdCalculator().get_macd(df)
 
     def getExp(self, df, periods):
         return df.ewm(span=periods, adjust=False, min_periods=periods).mean()

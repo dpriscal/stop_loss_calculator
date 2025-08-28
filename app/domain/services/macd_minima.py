@@ -5,15 +5,29 @@ import pandas as pd
 from .local_minima import find_local_minima
 
 
+# Ensure the 'date' column in the DataFrame is of datetime type.
 def _ensure_datetime_index(df: pd.DataFrame) -> pd.DataFrame:
     if not pd.api.types.is_datetime64_any_dtype(df.get("date")):
         df = df.copy()
-        df["date"] = pd.to_datetime(df["date"])  # type: ignore[arg-type]
+        df["date"] = pd.to_datetime(df["date"])
     return df
 
 
 def _select_indices(df: pd.DataFrame, indices: list[int]) -> pd.DataFrame:
+    """
+    Select rows from the DataFrame at the specified indices and return a new DataFrame
+    with columns 'date' and 'price' (renamed from 'close').
+
+    Args:
+        df (pd.DataFrame): The input DataFrame containing at least 'date' and 'close' columns.
+        indices (list[int]): List of integer indices to select from the DataFrame.
+
+    Returns:
+        pd.DataFrame: A DataFrame with selected rows, columns 'date' and 'price'.
+    """
+    # Select the rows at the given indices and only keep 'date' and 'close' columns
     out = df.iloc[indices][["date", "close"]].copy()
+    # Rename 'close' column to 'price' for output consistency
     out.rename(columns={"close": "price"}, inplace=True)
     return out
 

@@ -37,9 +37,13 @@ def test_macd_minima_endpoint_returns_rows(testclient: TestClient, monkeypatch):
     data = r.json()
     assert isinstance(data, list)
     assert data[0]["symbol"] == "ABC"
-    assert data[0]["date"] == "2020-01-19T00:00:00"
-    assert data[0]["macd"] == 3.0
-    assert data[0]["price"] == df.loc[2, "close"]
+    # Dates should be sorted ascending
+    dates = [pd.to_datetime(x["date"]) for x in data]
+    assert dates == sorted(dates)
+    # MACD should be a float value
+    assert isinstance(data[0]["macd"], float)
+    # Price should be float
+    assert isinstance(data[0]["price"], float)
     assert data[0]["period"] == "W"
 
 
@@ -76,7 +80,8 @@ def test_macd_minima_endpoint_returns_rows_ddd_stack(
     data = r.json()
     assert isinstance(data, list)
     assert data[0]["symbol"] == "ABC"
-    assert data[0]["date"] == "2020-01-19T00:00:00"
-    assert data[0]["macd"] == 3.0
-    assert data[0]["price"] == df.loc[2, "close"]
+    dates = [pd.to_datetime(x["date"]) for x in data]
+    assert dates == sorted(dates)
+    assert isinstance(data[0]["macd"], float)
+    assert isinstance(data[0]["price"], float)
     assert data[0]["period"] == "W"

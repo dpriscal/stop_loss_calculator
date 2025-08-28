@@ -11,6 +11,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from app.domain.services.ema_macd_calculator import EmaMacdCalculator
 from app.infrastructure.financialmodelingprep import (
     Financialmodelingprep,
     find_local_minima,
@@ -22,7 +23,7 @@ def plot_macd_with_minima(symbol: str, days: int, window: int, output: str) -> s
 
     df = f.getStockData(symbol, days)
     df_weekly = f.resample(df, "W")
-    macd = f.getMacd(df_weekly)
+    macd = EmaMacdCalculator().get_macd(df_weekly)
 
     minima_indices = find_local_minima(macd, window=window)
 

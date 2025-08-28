@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from typing import Dict, Iterable, List
+from typing import Dict, List
 
 import pandas as pd
 
 from app.domain.repositories import PriceDataRepository
+from app.domain.services.ema_macd_calculator import EmaMacdCalculator
 from app.domain.services.macd_minima import get_macd_minima_from_macd
 
 
@@ -48,7 +49,7 @@ def get_macd_minima(
     df = _ensure_datetime_index(df).reset_index(drop=True)
     df_resampled = _resample(df, periodicity)
 
-    macd_series = df_resampled["close"]
+    macd_series = EmaMacdCalculator().get_macd(df_resampled)
     minima_df = get_macd_minima_from_macd(df_resampled, macd_series, window=window)
 
     rows: List[Dict] = []
