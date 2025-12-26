@@ -65,6 +65,30 @@ curl -s "http://127.0.0.1:8000/stocks/AAPL"
 - Curl example (defaults shown explicitly):
 ```bash
 curl -s "http://127.0.0.1:8000/stocks/AAPL/macd-minima?period=W&window=1&days=3650"
+doc```
+
+### Get MACD chart for a symbol
+
+- Method: `GET`
+- Path: `/stocks/{symbol}/macd-chart`
+- Path params:
+  - `symbol` (string): the ticker, e.g., `AAPL`
+- Query params:
+  - `days` (integer, required): number of historical days to fetch (N)
+  - `periodicity` (string, default `W`): aggregation period. Supported: `D` (daily), `W` (weekly), `M` (monthly)
+- Response body (200): PNG image with two panels:
+  - Top panel: Stock prices (close and low lines)
+  - Bottom panel: MACD indicator with signal line (9-period EMA)
+- Response headers:
+  - `Content-Type: image/png`
+
+- Curl example:
+```bash
+# Save image to file
+curl -s "http://127.0.0.1:8000/stocks/AAPL/macd-chart?days=365&periodicity=W" -o chart.png
+
+# View in browser or download
+curl -s "http://127.0.0.1:8000/stocks/AAPL/macd-chart?days=365&periodicity=W" > chart.png
 ```
 
 ## Notes
@@ -75,6 +99,7 @@ curl -s "http://127.0.0.1:8000/stocks/AAPL/macd-minima?period=W&window=1&days=36
 ## Status codes
 
 - 200: success
+- 404: symbol not found or no historical data available
 - 422: invalid request parameters (e.g., non-integer `window`/`days`)
 - 500: server error (e.g., missing `FINANCIALMODELINGPREP_API_KEY` or upstream data issues)
 
