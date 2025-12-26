@@ -43,8 +43,8 @@ class GetMacdChart:
         Returns:
             PNG image bytes
         """
-        stock_data     = self._repo.get_stock_data(symbol, days)
-        stock_data     = self._ensure_datetime_index(stock_data).reset_index(drop=True)
+        stock_data = self._repo.get_stock_data(symbol, days)
+        stock_data = self._ensure_datetime_index(stock_data).reset_index(drop=True)
         resampled_data = self._resample(stock_data, periodicity)
 
         macd_series = EmaMacdCalculator().get_macd(resampled_data)
@@ -61,18 +61,15 @@ class GetMacdChart:
     def _resample(self, stock_data: pd.DataFrame, periodicity: str) -> pd.DataFrame:
         """Resample DataFrame according to the specified periodicity."""
         aggregation_logic = {
-            "open":   "first",
-            "high":   "max",
-            "low":    "min",
-            "close":  "last",
+            "open": "first",
+            "high": "max",
+            "low": "min",
+            "close": "last",
             "volume": "sum",
         }
         resampled_data = (
-            stock_data.set_index("date")
-            .resample(periodicity)
-            .apply(aggregation_logic)
+            stock_data.set_index("date").resample(periodicity).apply(aggregation_logic)
         )
         resampled_data["date"] = resampled_data.index
-        resampled_data.index   = range(1, len(resampled_data) + 1)
+        resampled_data.index = range(1, len(resampled_data) + 1)
         return resampled_data
-

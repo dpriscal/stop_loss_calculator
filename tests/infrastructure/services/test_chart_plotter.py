@@ -33,7 +33,9 @@ def test_chart_plotter_plot_macd_with_prices_returns_bytes(
     plotter = ChartPlotter()
     symbol = "AAPL"
 
-    result = plotter.plot_macd_with_prices(symbol, sample_price_data, sample_macd_series)
+    result = plotter.plot_macd_with_prices(
+        symbol, sample_price_data, sample_macd_series
+    )
 
     assert isinstance(result, bytes)
     assert len(result) > 0
@@ -45,9 +47,7 @@ def test_chart_plotter_plot_macd_with_prices_handles_empty_data():
     """Test that ChartPlotter handles empty data gracefully."""
     plotter = ChartPlotter()
     symbol = "AAPL"
-    empty_df = pd.DataFrame(
-        columns=["date", "open", "high", "low", "close", "volume"]
-    )
+    empty_df = pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
     empty_series = pd.Series(dtype=float)
 
     result = plotter.plot_macd_with_prices(symbol, empty_df, empty_series)
@@ -71,4 +71,3 @@ def test_chart_plotter_plot_macd_with_prices_handles_missing_signal_line(
     assert isinstance(result, bytes)
     assert len(result) > 0
     assert result[:8] == b"\x89PNG\r\n\x1a\n"
-

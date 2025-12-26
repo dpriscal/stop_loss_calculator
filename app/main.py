@@ -76,7 +76,9 @@ async def get_macd_chart_endpoint(
     - Bottom panel: MACD indicator with signal line
     """
     try:
-        image_bytes = use_case.execute(symbol=symbol, days=days, periodicity=periodicity)
+        image_bytes = use_case.execute(
+            symbol=symbol, days=days, periodicity=periodicity
+        )
         return Response(content=image_bytes, media_type="image/png")
     except RuntimeError as exc:
         # Handle cases where symbol is invalid or data is unavailable

@@ -50,28 +50,30 @@ class ChartPlotter:
         """Plot candlestick chart from OHLC data."""
         # Convert dates to numeric for positioning
         dates_numeric = mdates.date2num(dates)
-        
+
         # Calculate candlestick dimensions
-        opens   = df["open"].values
-        highs   = df["high"].values
-        lows    = df["low"].values
-        closes  = df["close"].values
-        
+        opens = df["open"].values
+        highs = df["high"].values
+        lows = df["low"].values
+        closes = df["close"].values
+
         # Determine if each candle is bullish (close > open) or bearish
         bullish = closes > opens
-        
+
         # Plot the wicks (high-low lines)
         for i, (date_num, high, low) in enumerate(zip(dates_numeric, highs, lows)):
             color = "#2ca02c" if bullish[i] else "#d62728"
             ax.plot([date_num, date_num], [low, high], color=color, linewidth=1.0)
-        
+
         # Plot the bodies (open-close rectangles)
         body_width = 0.6
-        for i, (date_num, open_val, close_val) in enumerate(zip(dates_numeric, opens, closes)):
+        for i, (date_num, open_val, close_val) in enumerate(
+            zip(dates_numeric, opens, closes)
+        ):
             color = "#2ca02c" if bullish[i] else "#d62728"
             body_bottom = min(open_val, close_val)
             body_height = abs(close_val - open_val)
-            
+
             # Draw rectangle for the body
             rect = plt.Rectangle(
                 (date_num - body_width / 2, body_bottom),
@@ -82,7 +84,7 @@ class ChartPlotter:
                 alpha=0.8,
             )
             ax.add_patch(rect)
-        
+
         # Format x-axis to show dates properly
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
         ax.xaxis.set_major_locator(mdates.AutoDateLocator())
@@ -109,4 +111,3 @@ class ChartPlotter:
         plt.close()
         buf.seek(0)
         return buf.read()
-

@@ -50,9 +50,7 @@ def test_get_macd_chart_handles_empty_data():
     """Test that GetMacdChart handles empty data gracefully."""
     from app.application.use_cases.get_macd_chart import GetMacdChart
 
-    empty_df = pd.DataFrame(
-        columns=["date", "open", "high", "low", "close", "volume"]
-    )
+    empty_df = pd.DataFrame(columns=["date", "open", "high", "low", "close", "volume"])
 
     repo = FakeRepo(empty_df)
     plotter = ChartPlotter()
@@ -91,4 +89,3 @@ def test_get_macd_chart_uses_correct_periodicity():
     assert isinstance(result, bytes)
     assert len(result) > 0
     assert result[:8] == b"\x89PNG\r\n\x1a\n"
-
